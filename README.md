@@ -23,9 +23,10 @@ Built as a jaxified, GPU-ready reimplementation of [sedpy](https://github.com/bd
 
 ```bash
 pip install git+https://github.com/Espe13/sedpy_jax.git
+```
 
-For development (recommended for contributors)
-
+### For development (recommended for contributors)
+```bash
 git clone https://github.com/Espe13/sedpy_jax.git
 cd sedpy_jax
 pip install -e .
