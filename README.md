@@ -149,13 +149,3 @@ Created and maintained by Amanda Stoffers (@Espe13)
 
 MIT License. See LICENSE.
 
-⸻
-
-Suggestions
-	•	Save an example filter plot as docs/images/filter_transmission_example.png to show off in the README.
-	•	Use rich or tabulate in code if you want to generate the property table programmatically.
-	•	Add badges (PyPI, Tests, Docs) once you’re ready to publish or CI test.
-
----
-
-Let me know if you'd like me to generate the actual filter plot or a GitHub Actions testing setup next.
