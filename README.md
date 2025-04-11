@@ -29,7 +29,7 @@ For development (recommended for contributors)
 git clone https://github.com/Espe13/sedpy_jax.git
 cd sedpy_jax
 pip install -e .
-
+```
 
 
 ⸻
