@@ -2,7 +2,7 @@
 
 **JAX-accelerated SED fitting tools, filter handling, and broadband photometry projection for astronomy.**
 
-Built as a modern, GPU-ready reimplementation of `sedpy` to support differentiable, scalable spectral energy distribution (SED) fitting — ideal for simulation-based inference, gradient-based samplers (e.g. HMC, NUTS), and high-throughput photometric pipelines.
+Built as a jaxified, GPU-ready reimplementation of [sedpy](https://github.com/bd-j/sedpy.git) by Ben Johnson, to support differentiable, scalable spectral energy distribution (SED) fitting — ideal for simulation-based inference, gradient-based samplers (e.g. HMC, NUTS), and high-throughput photometric pipelines.
 
 ---
 
@@ -34,9 +34,11 @@ pip install -e .
 
 ## Example: Using FilterSet to Project SEDs
 
+```python
 from sedpy_jax.observate import FilterSet
 import jax.numpy as jnp
 import matplotlib.pyplot as plt
+```
 
 ### Load a set of filters
 ```python
