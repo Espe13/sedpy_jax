@@ -539,7 +539,7 @@ class FilterSet:
         return maggies.squeeze()
 
 
-    def display(self, normalize=False, ax=None, colormap="plasma"):
+    def display(self, normalize=False, ax=None, colormap="coolwarm"):
         import matplotlib.pyplot as plt
         from matplotlib import cm
         from matplotlib.colors import Normalize
@@ -579,7 +579,7 @@ class FilterSet:
         ax.set_xlabel("Wavelength [Å]")
         ax.set_ylabel("Transmission" + (" (normalized)" if normalize else ""))
         ax.set_title("FilterSet Transmission Curves")
-        ax.legend(fontsize=8, ncol=2, loc="best")
+        ax.legend(fontsize=8, ncol=2, loc="best") 
 
         return ax
 
