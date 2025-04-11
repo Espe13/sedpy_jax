@@ -30,7 +30,7 @@ git clone https://github.com/Espe13/sedpy_jax.git
 cd sedpy_jax
 pip install -e .
 ```
-
+---
 
 ## Example: Using FilterSet to Project SEDs
 
@@ -82,7 +82,7 @@ plt.show()
 
 ![Toy SED projected through filters](docs/images/filterset_photometry.png)
 
-
+---
 
 # Table: Filter Properties
 
@@ -119,7 +119,7 @@ print(fset.filters[0])
 </pre>
 
 
-
+---
 
 # Included Tools
 
@@ -129,7 +129,7 @@ print(fset.filters[0])
 	•	rebin: flux-conserving rebinning of filters
 	•	getSED(): compute AB mags or maggies from source spectra
 
-
+---
 
 # Tests
 
@@ -137,7 +137,7 @@ To run tests:
 
 pytest tests/
 
-
+---
 
 # Feedback & Contributions
 
@@ -146,6 +146,7 @@ Feel free to open Issues or pull requests.
 Created and maintained by Amanda Stoffers (@Espe13)
 
 
+---
 
 # License
 
