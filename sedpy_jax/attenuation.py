@@ -364,16 +364,20 @@ ATTENUATION_LAWS = {
     "smc": {
         "func": smc,
         "params": {
-            "tau": "Optical depth at 1500 Å",
-            "index": "Not used (fixed shape)",
+            "tau_v": "Optical depth at 1500 Å",
+        },
+        "defaults": {
+            "tau_v": 1.0
         },
         "doc": "SMC extinction curve from Gordon et al. (2003), appropriate for low-metallicity environments."
     },
     "lmc": {
         "func": lmc,
         "params": {
-            "tau": "Optical depth at 1500 Å",
-            "index": "Not used (fixed shape)",
+            "tau_v": "Optical depth at 1500 Å",
+        },
+        "defaults": {
+            "tau_v": 1.0
         },
         "doc": "LMC extinction curve following Gordon et al. (2003), intermediate dust properties."
     },
@@ -383,61 +387,97 @@ ATTENUATION_LAWS = {
             "tau": "Amplitude of attenuation at 5500 Å",
             "index": "Power-law slope around the Calzetti curve",
         },
+        "defaults": {
+            "tau": 1.0,
+            "index": 0.0
+        },
         "doc": "Flexible attenuation curve with variable slope around Calzetti, Kriek & Conroy (2013)."
     },
     "powerlaw": {
         "func": powerlaw,
         "params": {
             "tau": "Optical depth at reference wavelength (e.g., 1500 Å)",
-            "index": "Slope of attenuation power law (typically negative)",
+            "alpha": "Slope of attenuation power law (typically negative)",
+        },
+        "defaults": {
+            "tau_v": 1.0,
+            "alpha": 1.0
         },
         "doc": "Simple power-law attenuation model used for general testing or toy models."
     },
     "calzetti": {
         "func": calzetti,
         "params": {
-            "tau": "V-band optical depth",
-            "index": "Not used (shape is fixed)",
+            "tau_v": "V-band optical depth",
+            "R_v": "Not used (shape is fixed)",
+        },
+        "defaults": {
+            "tau_v": 1.0,
+            "R_v": 4.05
         },
         "doc": "Empirical attenuation curve for local starbursts (Calzetti et al. 2000)."
     },
     "drude": {
         "func": drude,
         "params": {
-            "tau": "Amplitude of the curve",
-            "index": "Strength of the 2175 Å bump",
+            "gamma": "Width of the Drude profile (inverse microns)",
+            "x0": "Center of the Drude profile (inverse microns)",
         },
-        "doc": "Drude profile with bump centered at 2175 Å, suitable for modeling Milky Way-like features."
+        "defaults": {
+            "gamma": 0.9,
+            "x0": 4.59
+        },
+        "doc": "The value of the Drude profile at x, normalized such that the peak is 1, suitable for modeling Milky Way-like features."
     },
     "noll": {
         "func": noll,
         "params": {
-            "tau": "Optical depth scaling",
-            "index": "Deviation from Calzetti slope",
+            "tau_v": "V-band optical depth",
+            "delta": "Deviation from Calzetti slope",
+            "c_r": "Constant modifying effective R_v ",
+            "E_bump": "Bump strength (normalized Drude at 2175 \AA)"
+        },
+        "defaults": {
+            "tau_v": 1.0,
+            "delta": 0.0,
+            "c_r":0.0,
+            "Ebump":0.0
         },
         "doc": "Flexible curve from Noll et al. (2009) based on Calzetti with variable slope and bump strength."
     },
     "chevallard": {
         "func": chevallard,
         "params": {
-            "tau": "Normalization of attenuation",
-            "index": "Slope parameter for the two-component model",
+            "tau": "Optical depth at 5500 \AA"
+        },
+         "defaults": {
+            "tau_v": 1.0,
         },
         "doc": "Attenuation curve from Chevallard et al. (2013), including birth cloud and ISM components."
     },
     "cardelli": {
         "func": cardelli,
         "params": {
-            "tau": "Optical depth at 5500 Å",
-            "index": "Rv, the total-to-selective extinction ratio",
+            "tau": "Optical depth at 5500 \AA",
+            "R_v": "Rv, the total-to-selective extinction ratio",
+        },
+         "defaults": {
+            "tau_v": 1.0,
+            "R_v": 3.1
         },
         "doc": "Extinction law from Cardelli, Clayton & Mathis (1989), used widely in the Milky Way."
     },
     "conroy": {
         "func": conroy,
         "params": {
-            "tau": "Amplitude of the curve",
-            "index": "Slope modifier",
+            "tau": "Optical depth at 5500 \AA",
+            "R_v": "Rv, the total-to-selective extinction ratio",
+            "f_bump": "UV bump strength relative to Cardelli"
+        },
+         "defaults": {
+            "tau_v": 1.0,
+            "R_v": 3.1,
+            "f_bump": 0.6
         },
         "doc": "Flexible model from Conroy et al. including empirical bump and slope modifications."
     },
