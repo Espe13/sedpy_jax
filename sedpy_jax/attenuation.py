@@ -7,13 +7,15 @@ proposed attenuation curves.
 import jax.numpy as jnp
 import warnings, sys
 
+
+
 # --------------------
 # ATTENUATION CURVES
 # --------------------
 
 __all__ = ["calzetti", "chevallard", "conroy", "noll",
-           "powerlaw", "drude", "broken_powerlaw",
-           "cardelli", "smc", "lmc"]
+           "powerlaw", "drude", 
+           "cardelli", "smc", "lmc", "kriek_conroy"]
 
 def powerlaw(wave, tau_v=1.0, alpha=1.0, **kwargs):
     """Simple power-law attenuation, normalized to 5500 Å.
@@ -27,8 +29,6 @@ def powerlaw(wave, tau_v=1.0, alpha=1.0, **kwargs):
         The optical depth at each wavelength.
     """
     return tau_v * (wave / 5500.0) ** (-alpha)
-
-
 
 def calzetti(wave, tau_v=1.0, R_v=4.05, **kwargs):
     """Calzetti et al. 2000 starburst attenuation curve with FUV and NIR extrapolations.
@@ -73,7 +73,6 @@ def calzetti(wave, tau_v=1.0, R_v=4.05, **kwargs):
 
     return tau_v * (ktot / k_v)
 
-
 def drude(x, x0=4.59, gamma=0.90, **extras):
     """Drude profile for the 2175 Å bump.
 
@@ -91,7 +90,6 @@ def drude(x, x0=4.59, gamma=0.90, **extras):
         The value of the Drude profile at x, normalized such that the peak is 1.
     """
     return (x * gamma) ** 2 / ((x ** 2 - x0 ** 2) ** 2 + (x * gamma) ** 2)
-
 
 def noll(wave, tau_v=1.0, delta=0.0, c_r=0.0, Ebump=0.0, **kwargs):
     """Noll 2009 attenuation curve (Calzetti + Drude bump + power-law tilt).
@@ -115,8 +113,6 @@ def noll(wave, tau_v=1.0, delta=0.0, c_r=0.0, Ebump=0.0, **kwargs):
     a = (k * (1.0 - 1.12 * c_r) + 1.0) * (wave / 5500.0) ** delta
     return a * tau_v
 
-
-
 def chevallard(wave, tau_v=1.0, **kwargs):
     """Chevallard et al. (2013) attenuation curve (disk RT-inspired, no UV bump).
 
@@ -129,8 +125,6 @@ def chevallard(wave, tau_v=1.0, **kwargs):
     alpha = alpha_v + bb * (wave * 1e-4 - 0.55)  # Total slope
     tau_lambda = tau_v * (wave / 5500.0) ** (-alpha)
     return tau_lambda
-
-
 
 def conroy(wave, tau_v=1.0, R_v=3.1, f_bump=0.6, **kwargs):
     """Conroy & Schiminovich (2010) attenuation curve, including a reduced UV bump.
@@ -206,9 +200,6 @@ def conroy(wave, tau_v=1.0, R_v=3.1, f_bump=0.6, **kwargs):
 
     return tau_v * alam
 
-
-
-
 def cardelli(wave, tau_v=1.0, R_v=3.1, **kwargs):
     """Cardelli, Clayton, & Mathis (1989) extinction curve with O'Donnell (1994) UV update.
 
@@ -275,7 +266,6 @@ def cardelli(wave, tau_v=1.0, R_v=3.1, **kwargs):
 
     return tau_v * tau
 
-
 def smc(wave, tau_v=1.0, **kwargs):
     """Pei (1992) SMC extinction curve.
 
@@ -301,7 +291,6 @@ def smc(wave, tau_v=1.0, **kwargs):
 
     return tau_v * (abs_ab / norm_v)
 
-
 def lmc(wave, tau_v=1.0, **kwargs):
     """Pei (1992) LMC extinction curve.
 
@@ -326,7 +315,6 @@ def lmc(wave, tau_v=1.0, **kwargs):
         abs_ab += abs_term
 
     return tau_v * (abs_ab / norm_v)
-
 
 def kriek_conroy(wave, tau=1.0, dust_index=0.0):
     """
@@ -369,3 +357,88 @@ def kriek_conroy(wave, tau=1.0, dust_index=0.0):
     # Final optical depth per wavelength
     tau_lambda = tau * (cal00 + drude / 4.05) * (wave / lamv) ** dust_index
     return tau_lambda
+
+
+
+ATTENUATION_LAWS = {
+    "smc": {
+        "func": smc,
+        "params": {
+            "tau": "Optical depth at 1500 Å",
+            "index": "Not used (fixed shape)",
+        },
+        "doc": "SMC extinction curve from Gordon et al. (2003), appropriate for low-metallicity environments."
+    },
+    "lmc": {
+        "func": lmc,
+        "params": {
+            "tau": "Optical depth at 1500 Å",
+            "index": "Not used (fixed shape)",
+        },
+        "doc": "LMC extinction curve following Gordon et al. (2003), intermediate dust properties."
+    },
+    "kriek_conroy": {
+        "func": kriek_conroy,
+        "params": {
+            "tau": "Amplitude of attenuation at 5500 Å",
+            "index": "Power-law slope around the Calzetti curve",
+        },
+        "doc": "Flexible attenuation curve with variable slope around Calzetti, Kriek & Conroy (2013)."
+    },
+    "powerlaw": {
+        "func": powerlaw,
+        "params": {
+            "tau": "Optical depth at reference wavelength (e.g., 1500 Å)",
+            "index": "Slope of attenuation power law (typically negative)",
+        },
+        "doc": "Simple power-law attenuation model used for general testing or toy models."
+    },
+    "calzetti": {
+        "func": calzetti,
+        "params": {
+            "tau": "V-band optical depth",
+            "index": "Not used (shape is fixed)",
+        },
+        "doc": "Empirical attenuation curve for local starbursts (Calzetti et al. 2000)."
+    },
+    "drude": {
+        "func": drude,
+        "params": {
+            "tau": "Amplitude of the curve",
+            "index": "Strength of the 2175 Å bump",
+        },
+        "doc": "Drude profile with bump centered at 2175 Å, suitable for modeling Milky Way-like features."
+    },
+    "noll": {
+        "func": noll,
+        "params": {
+            "tau": "Optical depth scaling",
+            "index": "Deviation from Calzetti slope",
+        },
+        "doc": "Flexible curve from Noll et al. (2009) based on Calzetti with variable slope and bump strength."
+    },
+    "chevallard": {
+        "func": chevallard,
+        "params": {
+            "tau": "Normalization of attenuation",
+            "index": "Slope parameter for the two-component model",
+        },
+        "doc": "Attenuation curve from Chevallard et al. (2013), including birth cloud and ISM components."
+    },
+    "cardelli": {
+        "func": cardelli,
+        "params": {
+            "tau": "Optical depth at 5500 Å",
+            "index": "Rv, the total-to-selective extinction ratio",
+        },
+        "doc": "Extinction law from Cardelli, Clayton & Mathis (1989), used widely in the Milky Way."
+    },
+    "conroy": {
+        "func": conroy,
+        "params": {
+            "tau": "Amplitude of the curve",
+            "index": "Slope modifier",
+        },
+        "doc": "Flexible model from Conroy et al. including empirical bump and slope modifications."
+    },
+}
