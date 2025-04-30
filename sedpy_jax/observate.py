@@ -11,8 +11,11 @@ try:
 except ImportError:
     _HAS_RICH = False
 
-from sedpy_jax.reference_spectra import vega, solar, sedpydir
+from sedpy_jax.reference_spectra import vega, solar
 
+from pathlib import Path
+
+sedpydir = Path(__file__).resolve().parent
 
 lightspeed = 2.998e18  # AA/s
 
