@@ -326,3 +326,46 @@ def lmc(wave, tau_v=1.0, **kwargs):
         abs_ab += abs_term
 
     return tau_v * (abs_ab / norm_v)
+
+
+def kriek_conroy(wave, tau=1.0, dust_index=0.0):
+    """
+    Computes the wavelength-dependent optical depth τ_λ from the Kriek & Conroy (2013) attenuation curve,
+    including a Drude profile for the UV bump.
+
+    Parameters:
+        wave: Array of wavelengths in Angstroms.
+        tau: Normalization of attenuation (optical depth).
+        dust_index: Power-law slope modifier for the attenuation curve.
+    
+    Returns:
+        tau_lambda: Array of optical depth values at each wavelength.
+    """
+    # Constants from Kriek & Conroy (2013)
+    lamuvb = 2175.0  # Å, central wavelength of UV bump
+    dlam = 350.0     # Å, width of UV bump
+    lamv = 5500.0    # Å, normalization wavelength
+
+    # Base attenuation curve (Calzetti-like, with KC2013 mods)
+    cal00 = jnp.where(
+        wave >= 6300.0,
+        1.17 * (-1.857 + 1.04 * (1e4 / wave)) + 1.78,
+        1.17 * (-2.156 + 1.509 * (1e4 / wave) -
+                0.198 * (1e4 / wave) ** 2 +
+                0.011 * (1e4 / wave) ** 3) + 1.78
+    )
+
+    # Normalize by R_V = 4.05 and clip negatives
+    cal00 = jnp.maximum(cal00 / (0.44 * 4.05), 0.0)
+
+    # UV bump strength as function of dust index (Eq. 3 in Kriek & Conroy 2013)
+    eb = 0.85 - 1.9 * dust_index
+
+    # Drude profile
+    drude = (eb * (wave * dlam) ** 2) / (
+        (wave**2 - lamuvb**2) ** 2 + (wave * dlam) ** 2
+    )
+
+    # Final optical depth per wavelength
+    tau_lambda = tau * (cal00 + drude / 4.05) * (wave / lamv) ** dust_index
+    return tau_lambda
