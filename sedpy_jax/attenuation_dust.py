@@ -316,7 +316,7 @@ def lmc(wave, tau_lmc=1.0, **kwargs):
 
     return tau_lmc * (abs_ab / norm_v)
 
-def kriek_conroy(wave, tau_kc=1.0, dust_index=0.0):
+def kriek_conroy(wave, tau_kc=1.0, dust_index=0.0, **kwargs):
     """
     Computes the wavelength-dependent optical depth τ_λ from the Kriek & Conroy (2013) attenuation curve,
     including a Drude profile for the UV bump.
