@@ -8,6 +8,41 @@ import jax.numpy as jnp
 import warnings, sys
 
 
+# ==============================================================================
+# How to add a custom attenuation curve
+# ==============================================================================
+
+# To make a new attenuation curve compatible with CERIDWEN's dustmodels,
+# follow these steps:
+
+# 1. Add the function name to the __all__ list
+#    This ensures the function is available when the module is imported.
+
+# 2. Define the attenuation function
+#    The function must:
+#    - Take `wave` as its first argument (wavelength array in Angstroms)
+#    - Accept additional keyword arguments (**kwargs)
+#    Example format:
+#
+#    def my_attenuation_curve(wave, parameter1=default1, parameter2=default2, **kwargs):
+#        ...
+
+# 3. Register the function in the ATTENUATION_LAWS dictionary
+#    Add an entry at the bottom of this file using the following format:
+#
+#    "my_attenuation_curve": {
+#        "func": my_attenuation_curve,
+#        "params": {
+#            "parameter1": "Description of parameter1",
+#            "parameter2": "Description of parameter2",
+#        },
+#        "defaults": {
+#            "parameter1": default1,
+#            "parameter2": default2,
+#        },
+#        "doc": "Can NOT be left empty. My attenuation curve is curving my attenuation."
+#    },
+
 
 # --------------------
 # ATTENUATION CURVES
