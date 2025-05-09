@@ -140,6 +140,22 @@ pytest tests/
 
 ---
 
+# Citation
+
+If you use this package, please cite:
+
+```latex
+@misc{stoffers2025sedpyjax,
+  author       = {Amanda Stoffers, Ben Johnson},
+  title        = {sedpy\_jax: A JAX-compatible filter and SED utility library},
+  year         = {2025},
+  publisher    = {GitHub},
+  journal      = {GitHub repository},
+  howpublished = {\url{https://github.com/Espe13/sedpy_jax}},
+  note         = {Version 1.0},
+}
+```
+
 # Feedback & Contributions
 
 Feel free to open Issues or pull requests.
