@@ -146,7 +146,7 @@ If you use this package, please cite:
 
 ```latex
 @misc{stoffers2025sedpyjax,
-  author       = {Amanda Stoffers, Ben Johnson},
+  author       = {Amanda Stoffers, Benjamin D. Johnson},
   title        = {sedpy\_jax: A JAX-compatible filter and SED utility library},
   year         = {2025},
   publisher    = {GitHub},
