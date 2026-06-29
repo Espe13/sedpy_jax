@@ -45,7 +45,6 @@ from .observate import jax_interp
 
 __all__ = [
     "smooth_fft",
-    "smooth_fft_padded",
     "smooth_vel_fft",
     "smooth_wave_fft",
     "smooth_lsf_fft",
@@ -298,7 +297,7 @@ def smooth_vel_fft(wave, spec, sigma_v, outwave, inres=0.0):
     out_j     = jnp.asarray(outwave)
 
     spec_log  = jax_interp(w_log_j, jnp.asarray(wave), spec)
-    spec_conv = smooth_fft_padded(dv, spec_log, sigma_eff)
+    spec_conv = smooth_fft(dv, spec_log, sigma_eff)
     return jax_interp(out_j, w_log_j, spec_conv)
 
 
@@ -336,7 +335,7 @@ def smooth_wave_fft(wave, spec, sigma_l, outwave, inres=0.0):
     out_j     = jnp.asarray(outwave)
 
     spec_lin  = jax_interp(w_lin_j, jnp.asarray(wave), spec)
-    spec_conv = smooth_fft_padded(dw, spec_lin, sigma_eff)
+    spec_conv = smooth_fft(dw, spec_lin, sigma_eff)
     return jax_interp(out_j, w_lin_j, spec_conv)
 
 
@@ -384,7 +383,7 @@ def smooth_lsf_fft(wave, spec, sigma_lsf, outwave, pix_per_sigma=2, inres=0.0):
     # Interpolate spectrum to uniform x-grid (via lam(x) ↔ λ)
     spec_x    = jax_interp(lam_j, wave_j, spec)
     # Convolve with Gaussian of width x_per_sigma on a dx-spaced grid
-    spec_conv = smooth_fft_padded(dx, spec_x, x_per_sigma)
+    spec_conv = smooth_fft(dx, spec_x, x_per_sigma)
     # Interpolate to output wavelength grid
     return jax_interp(out_j, lam_j, spec_conv)
 
@@ -421,7 +420,7 @@ def make_vel_smoother(wave, outwave, inres=0.0):
     def smoother(spec, sigma_v):
         sigma_eff = jnp.sqrt(jnp.maximum(sigma_v**2 - inres**2, 0.0))
         spec_log  = jax_interp(w_log_j, wave_j, spec)
-        spec_conv = smooth_fft_padded(dv, spec_log, sigma_eff)
+        spec_conv = smooth_fft(dv, spec_log, sigma_eff)
         return jax_interp(out_j, w_log_j, spec_conv)
 
     return smoother
@@ -452,7 +451,7 @@ def make_wave_smoother(wave, outwave, inres=0.0):
     def smoother(spec, sigma_l):
         sigma_eff = jnp.sqrt(jnp.maximum(sigma_l**2 - inres**2, 0.0))
         spec_lin  = jax_interp(w_lin_j, wave_j, spec)
-        spec_conv = smooth_fft_padded(dw, spec_lin, sigma_eff)
+        spec_conv = smooth_fft(dw, spec_lin, sigma_eff)
         return jax_interp(out_j, w_lin_j, spec_conv)
 
     return smoother
@@ -496,7 +495,7 @@ def make_lsf_smoother(wave, sigma_lsf, outwave, pix_per_sigma=2, inres=0.0):
 
     def smoother(spec):
         spec_x    = jax_interp(lam_j, wave_j, spec)
-        spec_conv = smooth_fft_padded(dx, spec_x, x_per_sigma)
+        spec_conv = smooth_fft(dx, spec_x, x_per_sigma)
         return jax_interp(out_j, lam_j, spec_conv)
 
     return smoother

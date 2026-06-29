@@ -52,7 +52,7 @@ __all__ = ["calzetti", "chevallard", "conroy", "noll",
            "powerlaw", "drude", 
            "cardelli", "smc", "lmc", "kriek_conroy"]
 
-def powerlaw(wave, tau_pow=1.0, alpha_pow=1.0, **kwargs):
+def powerlaw(wave, tau_pow=1.0, alpha_pow=-1.0, **kwargs):
     """Simple power-law attenuation, normalized to 5500 Å.
 
     :param wave:
@@ -63,7 +63,7 @@ def powerlaw(wave, tau_pow=1.0, alpha_pow=1.0, **kwargs):
     :returns tau:
         The optical depth at each wavelength.
     """
-    return tau_pow * (wave / 5500.0) ** (-alpha_pow)
+    return tau_pow * (wave / 5500.0) ** (alpha_pow)
 
 def calzetti(wave, tau_cal00=1.0, R_v_cal00=4.05, **kwargs):
     """Calzetti et al. 2000 starburst attenuation curve with FUV and NIR extrapolations.
@@ -430,13 +430,19 @@ ATTENUATION_LAWS = {
     },
     "powerlaw": {
         "func": powerlaw,
+        # 2026-06-12: slope key renamed "alpha" -> "alpha_pow" to match the
+        # function signature.  Under the old name the Dust wrapper's
+        # signature-intersection extracted ONLY tau_pow, so any theta
+        # entry for the slope was silently ignored and the function
+        # default (-1.0) was always used.  With the correct key the slope
+        # is now steerable via fit_params["alpha_pow"].
         "params": {
-            "tau_pow": "Optical depth at reference wavelength (e.g., 1500 Å)",
-            "alpha": "Slope of attenuation power law (typically negative)",
+            "tau_pow": "Optical depth at 5500 Å (curve normalisation)",
+            "alpha_pow": "Slope of attenuation power law (typically negative)",
         },
         "defaults": {
             "tau_pow": 1.0,
-            "alpha": 1.0
+            "alpha_pow": -1.0
         },
         "doc": "Simple power-law attenuation model used for general testing or toy models."
     },

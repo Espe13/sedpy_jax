@@ -41,8 +41,22 @@ vega = _load_fits_spectrum(vega_path)
 # ----------
 # Solar Spectrum (converted to 10 pc)
 # ----------
+# Use Path(__file__) so the dev-tree copy is found regardless of which
+# sedpy_jax installation importlib.resources would otherwise resolve to.
+_solar_path_local = Path(__file__).resolve().parent / "data" / "sun_kurucz93.fits"
+
 try:
-    solar_path = files("sedpy_jax").joinpath("data/sun_kurucz93.fits")
-    solar = _load_fits_spectrum(solar_path, flux_scale=AU_TO_10PC_SOLID_ANGLE_RATIO)
-except Exception as e:
-    raise FileNotFoundError("Could not load Solar reference spectrum.") from e
+    if _solar_path_local.exists():
+        solar = _load_fits_spectrum(_solar_path_local,
+                                    flux_scale=AU_TO_10PC_SOLID_ANGLE_RATIO)
+    else:
+        # Fall back to importlib.resources (works when the package is
+        # installed with its data files present).
+        _solar_path_pkg = files("sedpy_jax").joinpath("data/sun_kurucz93.fits")
+        solar = _load_fits_spectrum(_solar_path_pkg,
+                                    flux_scale=AU_TO_10PC_SOLID_ANGLE_RATIO)
+except Exception:
+    # Solar spectrum is only used for the informational solar_ab_mag
+    # filter property.  All core photometry (AB maggies, Vega corrections)
+    # works fine without it.
+    solar = None

@@ -1,0 +1,17 @@
+Metadata-Version: 2.4
+Name: sedpy_jax
+Version: 0.1.0
+Summary: JAX-accelerated version of SEDpy by Ben Johnson
+Author: Amanda Stoffers
+Classifier: Programming Language :: Python :: 3
+Classifier: License :: OSI Approved :: MIT License
+License-File: LICENSE
+Requires-Dist: jax
+Requires-Dist: matplotlib
+Requires-Dist: numpy
+Requires-Dist: scipy
+Dynamic: author
+Dynamic: classifier
+Dynamic: license-file
+Dynamic: requires-dist
+Dynamic: summary

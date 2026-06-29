@@ -130,8 +130,9 @@ class Filter:
             from pkg_resources import resource_filename
             return resource_filename("sedpy_jax", os.path.join("data", "filters", f"{kname}.par"))
         except Exception:
-            from sedpy.observate import sedpydir
-            return os.path.join(sedpydir, "data", "filters", f"{kname}.par")
+            # Fall back to the data directory relative to this file
+            _this_dir = os.path.dirname(os.path.abspath(__file__))
+            return os.path.join(_this_dir, "data", "filters", f"{kname}.par")
         
     @property
     def transmission(self):
